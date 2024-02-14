@@ -1,0 +1,36 @@
+body {
+  background-color:bisque;
+  color:rgb(119, 0, 0);
+}
+
+a {
+  color: rgb(23, 97, 0)
+}
+
+.container {
+  display: block;
+  max-width: 1288px;
+  margin: 0 auto
+}
+
+label, input {
+  margin-bottom: 12px;
+}
+
+a {
+  margin:9px;
+}
+
+#animal-form {
+  margin-top: 222px; /* Adjust margin-top value as needed */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Arrange children in a column */
+  align-items: center; /* Align children in the center horizontally */
+  max-width: 600px; /* Set maximum width for the form */
+  margin-left: auto; /* Align form to the center horizontally */
+  margin-right: auto; /* Align form to the center horizontally */
+  padding: 20px; /* Add padding to the form */
+  background-color: rgba(24, 0, 0, 0.308); /* Set background color for the form */
+  border-radius: 10px; /* Add border radius for rounded corners */
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+}

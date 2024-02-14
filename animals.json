@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Arthur",
+    "type": "aardvark",
+    "age": "12"
+  },
+  {
+    "name": "Howie",
+    "type": "howler-monkey",
+    "age": "42"
+  },
+  {
+    "name": "Tony",
+    "type": "tiger",
+    "age": "7"
+  },
+  {
+    "name": "Tammy",
+    "type": "tiger",
+    "age": "36"
+  }
+]
