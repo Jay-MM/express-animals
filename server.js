@@ -14,9 +14,17 @@ app.get('/api/animals', (req, res) => {
 })
 
 app.get('/api/animals/:animalType', (req, res) => {
-  const results = animalData.filter(a => a.type === req.params.animalType)
+  const animalType =req.params.animalType
+  const pattern = /[a-z]/g
+  if (!pattern.test(animalType)) {
+    res.status(400).send(`<h1 style="display:flex; justify-content:center; padding-top:183px; font-size:69px "><span style="color:red">ERROR</span>: "${animalType}" is not a valid input. Make sure to use lower-case letters only!</h1>`)
+    return
+  }
+
+  const results = animalData.filter(a => a.type === animalType)
+
   if(results.length === 0) {
-    return res.status(404).send(`<h1 style="display:flex; justify-content:center; padding-top:333px; font-size:69px "><span style="color:red">ERROR</span>: "${req.params.animalType}" not found</h1>`)
+    return res.status(404).send(`<h1 style="display:flex; justify-content:center; padding-top:183px; font-size:69px "><span style="color:red">ERROR</span>: "${animalType}" not found</h1>`)
   }
 
   res.json(results)
