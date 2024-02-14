@@ -13,14 +13,14 @@ app.get('/api/animals', (req, res) => {
    res.json(animalData)
 })
 
-// // app.get('/api/animal/:animalType', (req, res) => {
-// //   const results = animalData.filter(a => a.type === req.params.animalType)
-// //   if(results.length === 0) {
-// //     return res.status(404).send(`<h1 style="display:flex; justify-content:center; padding-top:333px; font-size:69px "><span style="color:red">ERROR</span>: "${req.params.animalType}" not found</h1>`)
-// //   }
+app.get('/api/animals/:animalType', (req, res) => {
+  const results = animalData.filter(a => a.type === req.params.animalType)
+  if(results.length === 0) {
+    return res.status(404).send(`<h1 style="display:flex; justify-content:center; padding-top:333px; font-size:69px "><span style="color:red">ERROR</span>: "${req.params.animalType}" not found</h1>`)
+  }
 
-// //   res.json(results)
-// // })
+  res.json(results)
+})
 
 // // HTML (VIEW) Routes
 
