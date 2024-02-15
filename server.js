@@ -6,9 +6,9 @@ const animalData = require('./animals.json')
 
 // //  Unblock static folder so the browser can req resoures
 app.use(express.static('public'))
+app.use(express.json())
 
 // //  API Routes
-
 app.get('/api/animals', (req, res) => {
    res.json(animalData)
 })
@@ -30,8 +30,33 @@ app.get('/api/animals/:animalType', (req, res) => {
   res.json(results)
 })
 
-// // HTML (VIEW) Routes
+app.post('/api/animals', (req,res) =>{
+  const { name, age, type } = req.body
 
+  if (!name || !type || !age) {
+    res.status(400).json({ERROR : 'Missing name, type, or age'})
+    return
+  }
+
+   // Read the last object from the json file and get its id
+   const lastAnimal = animalData[animalData.length - 1];
+   const lastId = lastAnimal.id;
+ 
+   // Assign the new id as the last id plus one
+   const newAnimal = {
+     id: lastId + 1,
+     ...req.body,
+   }
+
+  animalData.push(newAnimal)
+
+  res.json(newAnimal)
+  // res.send(req.body) also works here but you will only see the json in when the client sends a GET req
+
+
+})
+
+// // HTML (VIEW) Routes
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"))
 })
