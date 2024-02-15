@@ -43,18 +43,27 @@ app.post('/api/animals', (req,res) =>{
     ...req.body,
   }
   //  read contents of animals.JSON file
-  // parse string into JSON
-  // push newAnimal into JSON
-  // stringify animal array 
-  // save file 
-  
-  
-  // animalData.push(newAnimal)
-  
-  // res.json(newAnimal)
-  // res.send(req.body) also works here but you will only see the json in when the client sends a GET req
-  
-  
+  fs.readFile(path.join(__dirname, 'animals.json' ), 'utf-8', function(err,data){
+    if (err) {
+      res.status(500).json(err)
+      return
+    }
+
+    // parse string into JSON
+    const animalData = JSON.parse(data)
+    // push newAnimal into JSON
+    animalData.push(newAnimal)
+    // stringify animal array & save file
+    fs.writeFile(path.join(__dirname, 'animals.json'), JSON.stringify(animalData), function(err, data){
+      if (err) {
+        res.status(500).json(err)
+        return
+      }
+      res.status(200).send(newAnimal)
+      // res.json(newAnimal)
+      // res.send(req.body) also works here but you will only see the json in when the client sends a GET req
+    }) 
+  })
 })
 
 app.get('/api/animals/:animalType', (req, res) => {
