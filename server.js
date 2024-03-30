@@ -85,13 +85,38 @@ app.get('/api/animals/:animalType', (req, res) => {
         const results = animalArray.filter(a => a.type === animalType)
       
         if(results.length === 0) {
-          return res.status(404).send(`<h1 style="display:flex; justify-content:center; padding-top:183px; font-size:69px "><span style="color:red">ERROR</span>: "${animalType}" not found</h1>`)
+          return res.status(404).json({ error:'No animals were found. Try adding some.' })
         }
       
         res.json(results)
       }) 
       
 
+})
+
+app.delete('/api/animals/:id', (req, res) => {
+
+  const id = req.params.id
+  if (!id) {
+    return res.status(400).json({ error: 'We need an id'})
+  }
+  // read file 
+  fs.readFile(path.join(__dirname, 'animals.json'),  'utf8', function(err, data){
+    // parse contents
+    const animalData = JSON.parse(data)
+    // modify contents
+    const updatedAnimalData = animalData.filter(animal => id != animal.id)
+    console.log(updatedAnimalData)
+    // stringify contents re-save file 
+    fs.writeFile(path.join(__dirname, 'animals.json'), JSON.stringify(updatedAnimalData), function(err){
+      if(err) {
+        return res.status(500).json(err)
+      }
+      res.json(true)
+    })
+  })
+
+console.log('Delete route hit!')
 })
 
 // // HTML (VIEW) Routes
