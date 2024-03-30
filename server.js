@@ -4,7 +4,6 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const port  = 3000
-const animalData = require('./animals.json')
 
 // //  Unblock static folder so the browser can req resoures
 app.use(express.static('public'))
@@ -13,7 +12,7 @@ app.use(express.json())
 // //  API Routes
 app.get('/api/animals', (req, res) => {
  // Read animals.json contents
-  fs.readFile(path.join(__dirname, 'animals.json'), 'utf-8', function(err, data){
+  fs.readFile(path.join(__dirname, 'db', 'animals.json'), 'utf-8', function(err, data){
     if (err) {
        res.status(500).json(err)
        return
@@ -34,37 +33,47 @@ app.post('/api/animals', (req,res) =>{
   }
   
   // Read the last object from the json file and get its id
-  const lastAnimal = animalData[animalData.length - 1];
-  const lastId = lastAnimal.id;
-  
-  // Assign the new id as the last id plus one
-  const newAnimal = {
-    id: lastId + 1,
-    ...req.body,
-  }
-  //  read contents of animals.JSON file
-  fs.readFile(path.join(__dirname, 'animals.json' ), 'utf-8', function(err,data){
+
+  // Read the animals.json file
+  fs.readFile(path.join(__dirname, 'db', 'animals.json'), 'utf-8', function(err, data){
     if (err) {
-      res.status(500).json(err)
-      return
+      res.status(500).json(err);
+      return;
     }
 
-    // parse string into JSON
-    const animalData = JSON.parse(data)
-    // push newAnimal into JSON
-    animalData.push(newAnimal)
-    // stringify animal array & save file
-    fs.writeFile(path.join(__dirname, 'animals.json'), JSON.stringify(animalData), function(err, data){
+    // Parse string into JSON
+    const animalData = JSON.parse(data);
+    
+    // Check if the array is empty
+    let lastId;
+    if (animalData.length === 0) {
+      // If the array is empty, set ID to 1
+      lastId = 0;
+    } else {
+      // If the array is not empty, get the last animal's ID
+      const lastAnimal = animalData[animalData.length - 1];
+      lastId = lastAnimal.id;
+    }
+
+    // Assign the new id as the last id plus one
+    const newAnimal = {
+      id: lastId + 1,
+      ...req.body,
+    };
+
+    // Push newAnimal into JSON
+    animalData.push(newAnimal);
+
+    // Stringify animal array & save file
+    fs.writeFile(path.join(__dirname, 'db', 'animals.json'), JSON.stringify(animalData), function(err) {
       if (err) {
-        res.status(500).json(err)
-        return
+        res.status(500).json(err);
+        return;
       }
-      res.status(200).send(newAnimal)
-      // res.json(newAnimal)
-      // res.send(req.body) also works here but you will only see the json in when the client sends a GET req
-    }) 
-  })
-})
+      res.status(200).send(newAnimal);
+    });
+  });
+});
 
 app.get('/api/animals/:animalType', (req, res) => {
   const animalType =req.params.animalType
@@ -75,7 +84,7 @@ app.get('/api/animals/:animalType', (req, res) => {
   }
   
       // Read animals.json contents
-      fs.readFile(path.join(__dirname, 'animals.json'), 'utf-8' ,function(err, data) {
+      fs.readFile(path.join(__dirname, 'db', 'animals.json'), 'utf-8' ,function(err, data) {
         if (err) {
           res.status(500).json(err)
           return
@@ -101,14 +110,14 @@ app.delete('/api/animals/:id', (req, res) => {
     return res.status(400).json({ error: 'We need an id'})
   }
   // read file 
-  fs.readFile(path.join(__dirname, 'animals.json'),  'utf8', function(err, data){
+  fs.readFile(path.join(__dirname, 'db', 'animals.json'),  'utf8', function(err, data){
     // parse contents
     const animalData = JSON.parse(data)
     // modify contents
     const updatedAnimalData = animalData.filter(animal => id != animal.id)
     console.log(updatedAnimalData)
     // stringify contents re-save file 
-    fs.writeFile(path.join(__dirname, 'animals.json'), JSON.stringify(updatedAnimalData), function(err){
+    fs.writeFile(path.join(__dirname, 'db', 'animals.json'), JSON.stringify(updatedAnimalData), function(err){
       if(err) {
         return res.status(500).json(err)
       }
