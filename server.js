@@ -6,6 +6,7 @@ const port  = 3000
 // //  Unblock static folder so the browser can req resoures
 app.use(express.static('public'))
 app.use(express.json())
+
 app.use(routes)
 
 app.listen(port, () => {
