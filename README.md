@@ -9,3 +9,5 @@ a simple application to practice with Express.js
 - Node.js
 
 - Express.js
+
+- MySQL2

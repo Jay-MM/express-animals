@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const path = require('path');
 const fs = require('fs')
+const connection = require('../db/connection');
 
 const dbPath = path.join(__dirname, '..', 'db', 'animals.json')
 
