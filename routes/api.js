@@ -6,70 +6,36 @@ const connection = require('../db/connection');
 const dbPath = path.join(__dirname, '..', 'db', 'animals.json')
 
 // //  API Routes
-router.get('/animals', (req, res) => {
-  // Read animals.json contents
-   fs.readFile(dbPath, 'utf-8', function(err, data){
-     if (err) {
-        res.status(500).json(err)
-        return
-     }
-     const json = JSON.parse(data)
-     // res.json the parsed array
-     res.json(json)
-   })
+router.get('/animals', async (req, res) => {
+  try{
+    const [results] = await connection.promise().query(`
+    SELECT animals.id, animals.name, animals.age, animalTypes.name AS animalType
+    FROM animals
+    INNER JOIN animalTypes ON animals.animalTypeId = animalTypes.id
+    `)
+    res.json(results)
+  }catch(err){
+    res,status(500).json(err)
+  }
+
  })
  
  
- router.post('/animals', (req,res) =>{
-   const { name, age, type } = req.body
-   
-   if (!name || !type || !age) {
-     res.status(400).json({ERROR : 'Missing name, type, or age'})
-     return
+ router.post('/animals', async (req,res) =>{
+  const { name, age, animalTypeId, hasOwner } = req.body
+  
+  if (!name || !animalTypeId || !age) {
+    res.status(400).json({ERROR : 'Missing name, animalTypeId, or age'})
+    return
+  }
+
+   try {
+     await connection.promise().query('INSERT INTO animals (name, age, animalTypeId, hasOwner) VALUES (?,?,?,?)',[name, age, animalTypeId, hasOwner])
+     res.json('Animal has been added successfully!')
+   } catch (err) {
+     res.status(500).json(err)
    }
-   
-   // Read the last object from the json file and get its id
- 
-   // Read the animals.json file
-   fs.readFile(dbPath, 'utf-8', function(err, data){
-     if (err) {
-       res.status(500).json(err);
-       return;
-     }
- 
-     // Parse string into JSON
-     const animalData = JSON.parse(data);
-     
-     // Check if the array is empty
-     let lastId;
-     if (animalData.length === 0) {
-       // If the array is empty, set ID to 1
-       lastId = 0;
-     } else {
-       // If the array is not empty, get the last animal's ID
-       const lastAnimal = animalData[animalData.length - 1];
-       lastId = lastAnimal.id;
-     }
- 
-     // Assign the new id as the last id plus one
-     const newAnimal = {
-       id: lastId + 1,
-       ...req.body,
-     };
- 
-     // Push newAnimal into JSON
-     animalData.push(newAnimal);
- 
-     // Stringify animal array & save file
-     fs.writeFile(dbPath, JSON.stringify(animalData), function(err) {
-       if (err) {
-         res.status(500).json(err);
-         return;
-       }
-       res.status(200).send(newAnimal);
-     });
-   });
- });
+});
  
  router.get('/animals/:animalType', (req, res) => {
    const animalType =req.params.animalType
@@ -99,28 +65,20 @@ router.get('/animals', (req, res) => {
  
  })
  
- router.delete('/animals/:id', (req, res) => {
+ router.delete('/animals/:id', async (req, res) => {
  
    const id = req.params.id
    if (!id) {
      return res.status(400).json({ error: 'We need an id'})
    }
-   // read file 
-   fs.readFile(dbPath,  'utf8', function(err, data){
-     // parse contents
-     const animalData = JSON.parse(data)
-     // modify contents
-     const updatedAnimalData = animalData.filter(animal => id != animal.id)
-     console.log(updatedAnimalData)
-     // stringify contents re-save file 
-     fs.writeFile(dbPath, JSON.stringify(updatedAnimalData), function(err){
-       if(err) {
-         return res.status(500).json(err)
-       }
-       res.json(true)
-     })
-   })
- 
+
+    try{
+      const [results] = await connection.promise().query('DELETE FROM animals WHERE id = ?', [id])
+      res.json('Animal has been deleted successfully!')
+    } catch (err) {
+      res.status(500).json(err)
+    }
+
  console.log('Delete route hit!')
  })
 

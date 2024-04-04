@@ -1,6 +1,6 @@
 const form = document.getElementById('animal-form')
 const nameInput = document.querySelector('[name=name]')
-const typeInput = document.querySelector('[name=type]')
+const typeInput = document.querySelector('[name=animalTypeId]')
 const ageInput = document.querySelector('[name=age]')
 
 
@@ -10,7 +10,7 @@ const handleSubmit = (e) => {
 
   const newAnimal  = {
     name: nameInput.value,
-    type: typeInput.value.toLowerCase(),
+    animalTypeId: parseInt(typeInput.value),
     age: parseInt(ageInput.value)
   }
   form.reset()

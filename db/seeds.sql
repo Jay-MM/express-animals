@@ -1,6 +1,10 @@
+INSERT INTO animalTypes (name) VALUES ("Bear");
+INSERT INTO animalTypes (name) VALUES ("Fish");
+INSERT INTO animalTypes (name) VALUES ("Fish");
 INSERT INTO animals (name, age, animalTypeId, hasOwner) VALUES ("Arthur", 12, 1, false);
 INSERT INTO animals (name, age, animalTypeId, hasOwner) VALUES ("Bobby", 6, 2, true);
 INSERT INTO animals(name, age, animalTypeId) VALUES("Mckenzie", 100, 2);
 INSERT INTO animals(name, age, animalTypeId) VALUES("Jimmy", 10, 3);
 INSERT INTO animals(name, age, animalTypeId) VALUES("Bowser", 1, 1);
 INSERT INTO animals(name, age, animalTypeId) VALUES("Ivy", 8,1);
+

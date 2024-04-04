@@ -9,7 +9,7 @@ const renderAnimals = (animals) => {
     li.innerHTML = `
     <div class="card">
       <h2 style="color:rgb(119, 0, 0)">${animal.name}</h2>
-      <p style="color:Black">Type: ${animal.type} | Age: ${animal.age}</p>
+      <p style="color:Black">Type: ${animal.animalType} | Age: ${animal.age}</p>
       <button data-id="${animal.id}">X</button>
     </div>
     `
